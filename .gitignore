@@ -1,0 +1,6 @@
+
+.idea/
+
+venv/
+
+myweatherapp/__pycache__/
