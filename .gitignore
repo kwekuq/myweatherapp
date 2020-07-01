@@ -4,3 +4,5 @@
 venv/
 
 myweatherapp/__pycache__/
+
+*.pyc
