@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from datetime import datetime
 
 
 class GetWeather(APIView):
@@ -18,7 +19,9 @@ class GetWeather(APIView):
             'max_humidity': self.Aggregator().aggregate_max_humidity(hourly_temperatures),
             'avg_humidity': self.Aggregator().aggregate_average_humidity(hourly_temperatures),
             'median_humidity': self.Aggregator().aggregate_median_humidity(hourly_temperatures),
-            'hourly_temperatures': ({'temp': item.get('temp'),
+            'hourly_temperatures': ({'date': datetime.fromtimestamp(item.get('dt')).date(),
+                                     'time': datetime.fromtimestamp(item.get('dt')).time(),
+                                     'temp': item.get('temp'),
                                      'humidity': item.get('humidity')}
                                     for item in hourly_temperatures)
         }
