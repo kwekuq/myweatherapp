@@ -10,3 +10,5 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+OPENWEATHERMAP_API = '889a55666a1b2dee775d135241b7d416'
