@@ -12,8 +12,13 @@ const App = () => {
             'lat': latLng.lat,
             'lng': latLng.lng
         }
-        axios.get('/api/v1/weather/', {params: params})
-            .then(res => setWeather(res.data))
+        if (latLng !== {} ) {
+            axios.get('/api/v1/weather/', {params: params})
+                .then(res => {
+                    setWeather(res.data)
+                })
+                .catch(console.log)
+        }
     }, [latLng])
 
     return (

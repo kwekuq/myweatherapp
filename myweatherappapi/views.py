@@ -1,3 +1,5 @@
+import json
+
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
@@ -9,6 +11,24 @@ class GetWeather(APIView):
     from .services.rest import Rest
     from .services.aggregator import Aggregator
 
+    @staticmethod
+    def _build_graph_data_model(hourly_temperatures):
+        data_sets = [{
+            'label': 'Temp',
+            'fill': False,
+            'borderColor': '#e84118',
+            'data': list(item.get('temp') for item in hourly_temperatures[0:12])
+        }, {
+            'label': 'Humidity',
+            'fill': False,
+            'borderColor': '#0097e6',
+            'data': list(item.get('humidity') for item in hourly_temperatures[0:12])
+        }]
+        return {
+            'labels': (datetime.fromtimestamp(item.get('dt')).time() for item in hourly_temperatures[0:12]),
+            'datasets': data_sets
+        }
+
     def _build_response(self, hourly_temperatures):
         return {
             'min_temp': self.Aggregator().aggregate_min_temp(hourly_temperatures),
@@ -19,11 +39,7 @@ class GetWeather(APIView):
             'max_humidity': self.Aggregator().aggregate_max_humidity(hourly_temperatures),
             'avg_humidity': self.Aggregator().aggregate_average_humidity(hourly_temperatures),
             'median_humidity': self.Aggregator().aggregate_median_humidity(hourly_temperatures),
-            'hourly_temperatures': ({'date': datetime.fromtimestamp(item.get('dt')).date(),
-                                     'time': datetime.fromtimestamp(item.get('dt')).time(),
-                                     'temp': item.get('temp'),
-                                     'humidity': item.get('humidity')}
-                                    for item in hourly_temperatures)
+            'hourly_temperatures': self._build_graph_data_model(hourly_temperatures)
         }
 
     def get(self, request):
