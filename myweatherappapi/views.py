@@ -1,23 +1,21 @@
-import json
+from datetime import datetime
 
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from datetime import datetime
 
 
 class GetWeather(APIView):
     from .services.rest import Rest
     from .services.aggregator import Aggregator
 
-    @staticmethod
-    def _build_graph_data_model(hourly_temperatures):
+    def _build_graph_data_model(self, hourly_temperatures):
         data_sets = [{
             'label': 'Temp',
             'fill': False,
             'borderColor': '#e84118',
-            'data': list(item.get('temp') for item in hourly_temperatures[0:12])
+            'data': list(self.Aggregator()._convert_kelvin_to_celsius(item.get('temp')) for item in hourly_temperatures[0:12])
         }, {
             'label': 'Humidity',
             'fill': False,
