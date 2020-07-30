@@ -10,12 +10,16 @@ class GetWeather(APIView):
     from .services.rest import Rest
     from .services.aggregator import Aggregator
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.aggregator = self.Aggregator()
+
     def _build_graph_data_model(self, hourly_temperatures):
         data_sets = [{
             'label': 'Temp',
             'fill': False,
             'borderColor': '#e84118',
-            'data': list(self.Aggregator()._convert_kelvin_to_celsius(item.get('temp')) for item in hourly_temperatures[0:12])
+            'data': list(self.aggregator.convert_kelvin_to_celsius(item.get('temp')) for item in hourly_temperatures[0:12])
         }, {
             'label': 'Humidity',
             'fill': False,
@@ -29,14 +33,14 @@ class GetWeather(APIView):
 
     def _build_response(self, hourly_temperatures):
         return {
-            'min_temp': self.Aggregator().aggregate_min_temp(hourly_temperatures),
-            'max_temp': self.Aggregator().aggregate_max_temp(hourly_temperatures),
-            'avg_temp': self.Aggregator().aggregate_average_temp(hourly_temperatures),
-            'median_temp': self.Aggregator().aggregate_median_temp(hourly_temperatures),
-            'min_humidity': self.Aggregator().aggregate_min_humidity(hourly_temperatures),
-            'max_humidity': self.Aggregator().aggregate_max_humidity(hourly_temperatures),
-            'avg_humidity': self.Aggregator().aggregate_average_humidity(hourly_temperatures),
-            'median_humidity': self.Aggregator().aggregate_median_humidity(hourly_temperatures),
+            'min_temp': self.aggregator.aggregate_min_temp(hourly_temperatures),
+            'max_temp': self.aggregator.aggregate_max_temp(hourly_temperatures),
+            'avg_temp': self.aggregator.aggregate_average_temp(hourly_temperatures),
+            'median_temp': self.aggregator.aggregate_median_temp(hourly_temperatures),
+            'min_humidity': self.aggregator.aggregate_min_humidity(hourly_temperatures),
+            'max_humidity': self.aggregator.aggregate_max_humidity(hourly_temperatures),
+            'avg_humidity': self.aggregator.aggregate_average_humidity(hourly_temperatures),
+            'median_humidity': self.aggregator.aggregate_median_humidity(hourly_temperatures),
             'hourly_temperatures': self._build_graph_data_model(hourly_temperatures)
         }
 

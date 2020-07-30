@@ -3,16 +3,16 @@ import statistics
 
 class Aggregator:
     def aggregate_min_temp(self, temperatures):
-        return self._convert_kelvin_to_celsius(self._get_min(temperatures, 'temp'))
+        return self.convert_kelvin_to_celsius(self._get_min(temperatures, 'temp'))
 
     def aggregate_max_temp(self, temperatures):
-        return self._convert_kelvin_to_celsius(self._get_max(temperatures, 'temp'))
+        return self.convert_kelvin_to_celsius(self._get_max(temperatures, 'temp'))
 
     def aggregate_average_temp(self, temperatures):
         return self._get_average(temperatures, 'temp')
 
     def aggregate_median_temp(self, temperatures):
-        return self._convert_kelvin_to_celsius(self._get_median(temperatures, 'temp'))
+        return self.convert_kelvin_to_celsius(self._get_median(temperatures, 'temp'))
 
     def aggregate_min_humidity(self, temperatures):
         return self._get_min(temperatures, 'humidity')
@@ -43,5 +43,5 @@ class Aggregator:
         return round(statistics.median((item.get(field) for item in obj_list)), 2)
 
     @staticmethod
-    def _convert_kelvin_to_celsius(kelvin):
-        return round((float(kelvin) - 273.15),2)
+    def convert_kelvin_to_celsius(kelvin):
+        return round((float(kelvin) - 273.15), 2)
